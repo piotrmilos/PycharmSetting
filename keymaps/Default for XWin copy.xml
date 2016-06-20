@@ -1,10 +1,15 @@
 <keymap version="1" name="Default for XWin copy" parent="Default for XWin">
-  <action id="$Copy" />
+  <action id="$Copy">
+    <keyboard-shortcut first-keystroke="meta c" />
+  </action>
   <action id="$Paste">
     <keyboard-shortcut first-keystroke="meta v" />
   </action>
   <action id="$Undo">
     <keyboard-shortcut first-keystroke="meta z" />
+  </action>
+  <action id="Editor Copy">
+    <keyboard-shortcut first-keystroke="meta c" />
   </action>
   <action id="Editor Paste">
     <keyboard-shortcut first-keystroke="meta v" />
