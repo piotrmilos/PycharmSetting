@@ -1,0 +1,9 @@
+<application>
+  <component name="PyTestFrameworkService">
+    <option name="SDK_TO_PYTEST">
+      <map>
+        <entry key="/usr/bin/python2.7" value="false" />
+      </map>
+    </option>
+  </component>
+</application>
