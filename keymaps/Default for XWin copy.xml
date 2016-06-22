@@ -26,6 +26,9 @@
   <action id="EditorDuplicate">
     <keyboard-shortcut first-keystroke="meta d" />
   </action>
+  <action id="Find">
+    <keyboard-shortcut first-keystroke="meta f" />
+  </action>
   <action id="SaveAll">
     <keyboard-shortcut first-keystroke="meta s" />
   </action>
