@@ -4,6 +4,7 @@
     <extensionMap>
       <mapping pattern="leCun" type="PLAIN_TEXT" />
       <mapping pattern="To do list" type="PLAIN_TEXT" />
+      <mapping ext="o" type="PLAIN_TEXT" />
     </extensionMap>
   </component>
 </application>
