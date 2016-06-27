@@ -1,0 +1,14 @@
+<application>
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="fcd013e7-c78b-42cd-9d8c-fcfcfcc7dfb7" name="Copy of project-level server 'ml1'" url="http://173.192.46.45">
+        <fileTransfer host="173.192.46.45" port="22" privateKey="$USER_HOME$/.ssh/id_rsa" accessType="SFTP" username="pmilos" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</application>
