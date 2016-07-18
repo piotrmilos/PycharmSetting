@@ -7,7 +7,6 @@
       <mapping pattern="To do list" type="PLAIN_TEXT" />
       <mapping ext="caffemodel" type="PLAIN_TEXT" />
       <mapping ext="o" type="PLAIN_TEXT" />
-      <mapping ext="yaml" type="PLAIN_TEXT" />
     </extensionMap>
   </component>
 </application>
