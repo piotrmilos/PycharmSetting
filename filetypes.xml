@@ -1,0 +1,13 @@
+<application>
+  <component name="FileTypeManager" version="17">
+    <ignoreFiles list="*$py.class;*.hprof;*.pyc;*.pyo;*.rbc;*.yarb;*~;.DS_Store;.git;.hg;.svn;CVS;RCS;SCCS;__pycache__;_svn;rcs;vssver.scc;vssver2.scc;" />
+    <extensionMap>
+      <mapping pattern="files" type="PLAIN_TEXT" />
+      <mapping pattern="leCun" type="PLAIN_TEXT" />
+      <mapping pattern="fafa" type="PLAIN_TEXT" />
+      <mapping pattern="To do list" type="PLAIN_TEXT" />
+      <mapping ext="caffemodel" type="PLAIN_TEXT" />
+      <mapping ext="o" type="PLAIN_TEXT" />
+    </extensionMap>
+  </component>
+</application>
