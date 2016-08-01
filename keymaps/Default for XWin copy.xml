@@ -77,6 +77,10 @@
     <keyboard-shortcut first-keystroke="ctrl g" />
     <keyboard-shortcut first-keystroke="meta g" />
   </action>
+  <action id="Run">
+    <keyboard-shortcut first-keystroke="shift f10" />
+    <keyboard-shortcut first-keystroke="meta r" />
+  </action>
   <action id="SaveAll">
     <keyboard-shortcut first-keystroke="meta s" />
   </action>
