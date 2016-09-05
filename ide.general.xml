@@ -1,9 +1,0 @@
-<application>
-  <component name="GeneralSettings">
-    <option name="confirmExit" value="false" />
-  </component>
-  <component name="Registry">
-    <entry key="debugger.watches.in.variables" value="false" />
-    <entry key="ide.windowSystem.autoShowProcessPopup" value="true" />
-  </component>
-</application>
