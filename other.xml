@@ -51,16 +51,19 @@
     <option name="SDK_TO_PYTEST">
       <map>
         <entry key="/usr/bin/python2.7" value="false" />
+        <entry key="ssh://pmilos@173.192.46.45:22/usr/bin/python" value="true" />
       </map>
     </option>
     <option name="SDK_TO_NOSETEST">
       <map>
         <entry key="/usr/bin/python2.7" value="false" />
+        <entry key="ssh://pmilos@173.192.46.45:22/usr/bin/python" value="true" />
       </map>
     </option>
     <option name="SDK_TO_ATTEST">
       <map>
         <entry key="/usr/bin/python2.7" value="false" />
+        <entry key="ssh://pmilos@173.192.46.45:22/usr/bin/python" value="false" />
       </map>
     </option>
   </component>
