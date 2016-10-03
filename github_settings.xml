@@ -1,0 +1,6 @@
+<application>
+  <component name="GithubSettings">
+    <option name="LOGIN" value="piotr.milos@codilime.com" />
+    <option name="AUTH_TYPE" value="BASIC" />
+  </component>
+</application>
