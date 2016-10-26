@@ -1,4 +1,9 @@
-from util import *
+from __future__ import absolute_import
+
+import sys
+sys.path.insert(0,'../..')
+
+from reversi_ai.util import *
 
 WHITE_PIECE = 'O'
 BLACK_PIECE = 'X'

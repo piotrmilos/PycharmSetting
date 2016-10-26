@@ -1,6 +1,6 @@
 from copy import deepcopy
 import time
-from game.board import Board, BLACK, WHITE, TIE, EMPTY
+from board import Board, BLACK, WHITE, TIE, EMPTY
 from agents.random_agent import RandomAgent
 from util import *
 from cache_dict import CacheDict
