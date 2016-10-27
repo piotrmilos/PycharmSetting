@@ -1,140 +1,38 @@
-from __future__ import absolute_import
-import sys
-sys.path.insert(0,'..')
+# -*- coding: utf-8 -*-
 
-from gym import error
-try:
-    import pachi_py
-except ImportError as e:
-    # The dependency group [pachi] should match the name is setup.py.
-    raise error.DependencyNotInstalled('{}. (HINT: you may need to install the Go dependencies via "pip install gym[pachi]".)'.format(e))
+"""
+Game of Hex
+"""
 
-from itertools import product
-    
-import numpy as np
-import gym
-from gym import spaces
-from gym.utils import seeding
 from six import StringIO
 import sys
-import six
 
-from reversi_ai.game.board import Board
-#from reveresi_ai.util import *
-from othello_environment_gym.othello_board_for_gym import GymBoard
+from itertools import product
 
-BLACK = 1
-WHITE = -1
+import gym
+from gym import spaces
+import numpy as np
+from gym import error
+from gym.utils import seeding
 
-# The coordinate representation of Pachi (and pachi_py) is defined on a board
-# with extra rows and columns on the margin of the board, so positions on the board
-# are not numbers in [0, board_size**2) as one would expect. For this Go env, we instead
-# use an action representation that does fall in this more natural range.
-
-def _pass_action(board_size):
-    return board_size**2
-
-def _resign_action(board_size):
-    return board_size**2 + 1
-
-def _coord_to_action(board, c):
-    '''Converts Pachi coordinates to actions'''
-    if c == pachi_py.PASS_COORD: return _pass_action(board.size)
-    if c == pachi_py.RESIGN_COORD: return _resign_action(board.size)
-    i, j = board.coord_to_ij(c)
-    return i*board.size + j
-
-def _action_to_coord(board, a):
-    '''Converts actions to Pachi coordinates'''
-    if a == _pass_action(board.size): return pachi_py.PASS_COORD
-    if a == _resign_action(board.size): return pachi_py.RESIGN_COORD
-    return board.ij_to_coord(a // board.size, a % board.size)
-
-def str_to_action(board, s):
-    return _coord_to_action(board, board.str_to_coord(s.encode()))
-
-class OthelloState(object):
-    '''
-    Go game state. Consists of a current player and a board.
-    Actions are exposed as integers in [0, num_actions), which is different
-    from Pachi's internal "coord_t" encoding.
-    '''
-    def __init__(self, board, color):
-        '''
-        Args:
-            board: current board
-            color: color of current player
-        '''
-        assert color in [pachi_py.BLACK, pachi_py.WHITE], 'Invalid player color'
-        self.board, self.color = board, color
-
-    def act(self, action):
-        '''
-        Executes an action for the current player
-        Returns:
-            a new GoState with the new board and the player switched
-        '''
-        return OthelloState(
-            self.board.play(_action_to_coord(self.board, action), self.color),
-            pachi_py.stone_other(self.color))
-
-    def __repr__(self):
-        return 'To play: {}\n{}'.format(six.u(pachi_py.color_to_str(self.color)), self.board.__repr__().decode())
-
-
-### Adversary policies ###
 def make_random_policy(np_random):
-    def random_policy(curr_state, prev_state, prev_action):
-        b = curr_state.board
-        legal_coords = b.get_legal_coords(curr_state.color)
-        return _coord_to_action(b, np_random.choice(legal_coords))
+    def random_policy(state,player_color):
+        possible_moves = OthelloEnv.get_possible_actions(state,player_color)
+
+        # No moves left
+        if len(possible_moves) == 0:
+            return None
+        a = np_random.randint(len(possible_moves))
+        return possible_moves[a]
     return random_policy
 
-def make_pachi_policy(board, engine_type='uct', threads=1, pachi_timestr=''):
-    engine = pachi_py.PyPachiEngine(board, engine_type, six.b('threads=%d' % threads))
-
-    def pachi_policy(curr_state, prev_state, prev_action):
-        if prev_state is not None:
-            assert engine.curr_board == prev_state.board, 'Engine internal board is inconsistent with provided board. The Pachi engine must be called consistently as the game progresses.'
-            prev_coord = _action_to_coord(prev_state.board, prev_action)
-            engine.notify(prev_coord, prev_state.color)
-            engine.curr_board.play_inplace(prev_coord, prev_state.color)
-        out_coord = engine.genmove(curr_state.color, pachi_timestr)
-        out_action = _coord_to_action(curr_state.board, out_coord)
-        engine.curr_board.play_inplace(out_coord, curr_state.color)
-        return out_action
-
-    return pachi_policy
-
-def _play(black_policy_fn, white_policy_fn, board_size=19):
-    '''
-    Samples a trajectory for two player policies.
-    Args:
-        black_policy_fn, white_policy_fn: functions that maps a GoState to a move coord (int)
-    '''
-    
-    moves = []
-
-    prev_state, prev_action = None, None
-    curr_state = OthelloState(pachi_py.CreateBoard(board_size), BLACK)
-
-    while not curr_state.board.is_terminal:
-        a = (black_policy_fn if curr_state.color == BLACK else 
-             white_policy_fn)(curr_state, prev_state, prev_action)
-        next_state = curr_state.act(a)
-        moves.append((curr_state, a, next_state))
-
-        prev_state, prev_action = curr_state, a
-        curr_state = next_state
-
-    return moves
-
-
 class OthelloEnv(gym.Env):
-    '''
-    Go environment. Play against a fixed opponent.
-    '''
-    metadata = {"render.modes": ["human", "ansi"]}
+    """
+    Hex environment. Play against a fixed opponent.
+    """
+    BLACK = 0
+    WHITE = 1
+    metadata = {"render.modes": ["ansi","human"]}
 
     def __init__(self, player_color, opponent, observation_type, illegal_move_mode, board_size):
         """
@@ -143,143 +41,344 @@ class OthelloEnv(gym.Env):
             opponent: An opponent policy
             observation_type: State encoding
             illegal_move_mode: What to do when the agent makes an illegal move. Choices: 'raise' or 'lose'
+            board_size: size of the Hex board
         """
         assert isinstance(board_size, int) and board_size >= 1, 'Invalid board size: {}'.format(board_size)
         self.board_size = board_size
 
-        self._seed()
-
         colormap = {
-            'black': BLACK,
-            'white': WHITE,
+            'black': OthelloEnv.BLACK,
+            'white': OthelloEnv.WHITE,
         }
         try:
             self.player_color = colormap[player_color]
         except KeyError:
             raise error.Error("player_color must be 'black' or 'white', not {}".format(player_color))
 
-        self.opponent_policy = None
         self.opponent = opponent
-
-        assert observation_type in ['image3c']
+    
+        assert observation_type in ['numpy3c']
         self.observation_type = observation_type
 
         assert illegal_move_mode in ['lose', 'raise']
         self.illegal_move_mode = illegal_move_mode
 
-        if self.observation_type != 'image3c':
+        if self.observation_type != 'numpy3c':
             raise error.Error('Unsupported observation type: {}'.format(self.observation_type))
 
-        shape = pachi_py.CreateBoard(self.board_size).encode().shape
-        self.observation_space = spaces.Box(np.zeros(shape), np.ones(shape))
-        # One action for each board position, pass, and resign
-        self.action_space = spaces.Discrete(self.board_size**2 + 2)
+        # One action for each board position and resign
+        self.action_space = spaces.Discrete(self.board_size ** 2)
+        observation = self.reset()
+        self.observation_space = spaces.Box(np.zeros(observation.shape), np.ones(observation.shape))
 
-        # Filled in by _reset()
-        self.state = None
-        self.done = True
+        self._seed()
 
     def _seed(self, seed=None):
-        self.np_random, seed1 = seeding.np_random(seed)
-        # Derive a random seed.
-        seed2 = seeding.hash_seed(seed1 + 1) % 2**32
-        pachi_py.pachi_srand(seed2)
-        return [seed1, seed2]
+        self.np_random, seed = seeding.np_random(seed)
+
+        # Update the random policy if needed
+        if isinstance(self.opponent, str):
+            if self.opponent == 'random':
+                self.opponent_policy = make_random_policy(self.np_random)
+            else:
+                raise error.Error('Unrecognized opponent policy {}'.format(self.opponent))
+        else:
+            self.opponent_policy = self.opponent
+
+        return [seed]
 
     def _reset(self):
-        self.state = OthelloState(GymBoard(self.board_size), BLACK)
-        # (re-initialize) the opponent
-        # necessary because a pachi engine is attached to a game via internal data in a board
-        # so with a fresh game, we need a fresh engine
-        self._reset_opponent(self.state.board)
+        
+        self._seed()
+        
+        self.state = np.zeros((3, self.board_size, self.board_size))
+        self.state[2,:,:] = 1.0
+        
+        center_positions = [int(self.board_size/2.-1),int(self.board_size/2.)]
 
+        # set initial black stones
+        self.state[0, center_positions[1],center_positions[0] ] = 1.0
+        self.state[0, center_positions[0],center_positions[1]] = 1.0
+        self.state[2, center_positions[1],center_positions[0] ] = 0.0
+        self.state[2, center_positions[0],center_positions[1]] = 0.0
+        # set initial white stones
+        self.state[1, center_positions[0],center_positions[0]] = 1.0
+        self.state[1, center_positions[1],center_positions[1]] = 1.0
+        self.state[2, center_positions[0],center_positions[0] ] = 0.0
+        self.state[2, center_positions[1],center_positions[1]] = 0.0
+
+        self.to_play = OthelloEnv.BLACK
+        self.done = False
+        
         # Let the opponent play if it's not the agent's turn
-        opponent_resigned = False
-        if self.state.color != self.player_color:
-            self.state, opponent_resigned = self._exec_opponent_play(self.state, None, None)
-
-        # We should be back to the agent color
-        assert self.state.color == self.player_color
-
-        self.done = self.state.board.is_terminal or opponent_resigned
-        return self.state.board.encode()
-
-    def _close(self):
-        self.opponent_policy = None
-        self.state = None
-
-    def _render(self, mode="human", close=False):
-        if close:
-            return
-        outfile = StringIO() if mode == 'ansi' else sys.stdout
-        outfile.write(repr(self.state) + '\n')
-        return outfile
+        if self.player_color != self.to_play:
+            a = self.opponent_policy(self.state,self.to_play)
+            OthelloEnv.make_move(self.state, a, OthelloEnv.BLACK)
+            self.to_play = OthelloEnv.WHITE
+        return self.state
 
     def _step(self, action):
-        assert self.state.color == self.player_color
-
+#        print(OthelloEnv.readable_board(self.state),
+#          self.player_color)
+        print("move",OthelloEnv.action_to_coordinate(self.state,action))
+        assert self.to_play == self.player_color
         # If already terminal, then don't do anything
         if self.done:
-            return self.state.board.encode(), 0., True, {'state': self.state}
+            return self.state, 0., True, {'state': self.state}
 
-        # If resigned, then we're done
-        if action == _resign_action(self.board_size):
-            self.done = True
-            return self.state.board.encode(), -1., True, {'state': self.state}
-
-        # Play
-        prev_state = self.state
-        try:
-            self.state = self.state.act(action)
-        except pachi_py.IllegalMove:
+        # if HexEnv.pass_move(self.board_size, action):
+        #     pass
+        
+        if OthelloEnv.resign_move(self.board_size, action):
+            return self.state, -1, True, {'state': self.state}
+        elif not OthelloEnv.valid_move(self.state, self.to_play, action):
             if self.illegal_move_mode == 'raise':
-                six.reraise(*sys.exc_info())
+                raise Exception("illegal move exeption")
             elif self.illegal_move_mode == 'lose':
                 # Automatic loss on illegal move
                 self.done = True
-                return self.state.board.encode(), -1., True, {'state': self.state}
+                return self.state, -1., True, {'state': self.state}
             else:
                 raise error.Error('Unsupported illegal move action: {}'.format(self.illegal_move_mode))
+        else:
+            OthelloEnv.make_move(self.state, action, self.player_color)
 
         # Opponent play
-        if not self.state.board.is_terminal:
-            self.state, opponent_resigned = self._exec_opponent_play(self.state, prev_state, action)
-            # After opponent play, we should be back to the original color
-            assert self.state.color == self.player_color
+        a = self.opponent_policy(self.state,OthelloEnv.get_opponent(self.player_color))
 
-            # If the opponent resigns, then the agent wins
-            if opponent_resigned:
-                self.done = True
-                return self.state.board.encode(), 1., True, {'state': self.state}
+        # if HexEnv.pass_move(self.board_size, action):
+        #     pass
 
-        # Reward: if nonterminal, then the reward is 0
-        if not self.state.board.is_terminal:
-            self.done = False
-            return self.state.board.encode(), 0., False, {'state': self.state}
+        # Making move if there are moves left
+        if a is not None:
+            if OthelloEnv.resign_move(self.board_size, action):
+                return self.state, 1, True, {'state': self.state}
+            else:
+                OthelloEnv.make_move(self.state, a, 1 - self.player_color)
 
-        # We're in a terminal state. Reward is 1 if won, -1 if lost
-        assert self.state.board.is_terminal
-        self.done = True
-        white_wins = self.state.board.official_score > 0
-        black_wins = self.state.board.official_score < 0
-        player_wins = (white_wins and self.player_color == pachi_py.WHITE) or (black_wins and self.player_color == pachi_py.BLACK)
-        reward = 1. if player_wins else -1. if (white_wins or black_wins) else 0.
-        return self.state.board.encode(), reward, True, {'state': self.state}
+        reward = OthelloEnv.game_finished(self.state)
+        if self.player_color == OthelloEnv.WHITE:
+            reward = - reward
+        self.done = reward != 0
+        return self.state, reward, self.done, {'state': self.state}
 
-    def _exec_opponent_play(self, curr_state, prev_state, prev_action):
-        assert curr_state.color != self.player_color
-        opponent_action = self.opponent_policy(curr_state, prev_state, prev_action)
-        opponent_resigned = opponent_action == _resign_action(self.board_size)
-        return curr_state.act(opponent_action), opponent_resigned
+    # def _reset_opponent(self):
+    #     if self.opponent == 'random':
+    #         self.opponent_policy = random_policy
+    #     else:
+    #         raise error.Error('Unrecognized opponent policy {}'.format(self.opponent))
 
-    @property
-    def _state(self):
-        return self.state
+    def _render(self, mode='human', close=False):
+        if close:
+            return
+        board = self.state
+        outfile = StringIO() if mode == 'ansi' else sys.stdout
+        outfile.write(' ' * 5)
+        for j in range(board.shape[1]):
+            outfile.write(' ' +  str(j + 1) + '  | ')
+        outfile.write('\n')
+        outfile.write(' ' * 5)
+        outfile.write('-' * (board.shape[1] * 6 - 1))
+        outfile.write('\n')
+        for i in range(board.shape[1]):
+            outfile.write(' ' + '  |')
+            for j in range(board.shape[1]):
+                if board[2, i, j] == 1:
+                    outfile.write('  O  ')
+                elif board[0, i, j] == 1:
+                    outfile.write('  B  ')
+                else:
+                    outfile.write('  W  ')
+                outfile.write('|')
+            outfile.write('\n')
+            outfile.write(' ' )
+            outfile.write('-' * (board.shape[1] * 7 - 1))
+            outfile.write('\n')
 
-    def _reset_opponent(self, board):
-        if self.opponent == 'random':
-            self.opponent_policy = make_random_policy(self.np_random)
-        elif self.opponent == 'pachi:uct:_2400':
-            self.opponent_policy = make_pachi_policy(board=board, engine_type=six.b('uct'), pachi_timestr=six.b('_2400')) # TODO: strength as argument
+        if mode != 'human':
+            return outfile
+
+    # @staticmethod
+    # def pass_move(board_size, action):
+    #     return action == board_size ** 2
+
+    @staticmethod
+    def resign_move(board_size, action):
+        return action == board_size ** 2
+
+#    @staticmethod
+#    def valid_move(board, action):
+#        coords = OthelloEnv.action_to_coordinate(board, action)
+#        if board[2, coords[0], coords[1]] == 1:
+#            return True
+#        else:
+#            return False
+
+    @staticmethod
+    def valid_move(game_state,player_color,action):
+#        print(OthelloEnv.readable_board(game_state),
+#              player_color,
+#              OthelloEnv.action_to_coordinate(game_state,action))
+        board = game_state 
+        board_size = board.shape[2]
+        color = player_color
+        y,x = OthelloEnv.action_to_coordinate(board, action)
+        
+        if board[2, y, x] == 0:
+            return False
+            
+        enemy_color = OthelloEnv.get_opponent(color)
+
+        # now check in all directions, including diagonal
+        for dy,dx in product(range(-1, 2),range(-1,2)):
+            if dy == 0 and dx == 0:
+                continue
+
+            # there needs to be >= 1 opponent piece
+            # in this given direction, followed by 1 of player's piece
+            distance = 1
+            yp = (distance * dy) + y
+            xp = (distance * dx) + x
+
+            while OthelloEnv.is_in_bounds(xp, yp, board_size) and board[enemy_color,yp,xp] == 1.:
+                distance += 1
+                yp = (distance * dy) + y
+                xp = (distance * dx) + x
+
+            if distance > 1 and OthelloEnv.is_in_bounds(xp, yp, board_size) and board[color,yp,xp] == 1.:
+                return True
+        return False
+            
+            
+    @staticmethod
+    def make_move(board, action, player_color):
+        board_size = board.shape[-1]
+        y,x = OthelloEnv.action_to_coordinate(board, action)
+        board = OthelloEnv.place_stone(board,player_color,[y,x])
+
+        enemy_color = OthelloEnv.get_opponent(player_color)
+
+        to_flip = []
+        for dy,dx in product(range(-1, 2),range(-1, 2)):
+            if dy == 0 and dx == 0:
+                continue
+
+            # there needs to be >= 1 opponent piece
+            # in this given direction, followed by 1 of player's piece
+            distance = 1
+            yp = (distance * dy) + y
+            xp = (distance * dx) + x
+
+            flip_candidates = []
+            while OthelloEnv.is_in_bounds(xp, yp, board_size) and board[enemy_color,yp,xp] == 1.0:
+                flip_candidates.append((xp, yp))
+                distance += 1
+                yp = (distance * dy) + y
+                xp = (distance * dx) + x
+
+            if distance > 1 and OthelloEnv.is_in_bounds(xp, yp, board_size) and board[player_color,yp,xp] == 1.0:
+                to_flip.extend(flip_candidates)
+
+        for each in to_flip:
+            board = OthelloEnv.flip_stone(board,player_color,each)
+        
+    @staticmethod
+    def place_stone(board, color, coords):
+        y,x = coords
+        board[color,y,x] = 1.0
+        board[2,y,x] = 0.0
+        return board
+
+    @staticmethod
+    def flip_stone(board, color, coords):
+        y,x = coords
+        enemy_color = OthelloEnv.get_opponent(color)
+        board[color,y,x] =1.0
+        board[2,y,x] =0.0
+        board[enemy_color,y,x] =0.0
+        return board
+        
+    @staticmethod
+    def coordinate_to_action(board, coords):
+        return coords[0] * board.shape[-1] + coords[1]
+
+    @staticmethod
+    def action_to_coordinate(board, action):
+        return action // board.shape[-1], action % board.shape[-1]
+
+    @staticmethod
+    def readable_board(board):
+        board_size = board.shape[-1]
+        readable_board = np.zeros((board_size,board_size))
+        for y,x in product(range(board_size),range(board_size)):
+            if board[0,y,x] == 1:
+                readable_board[y,x] = 8
+            if board[1,y,x] == 1:
+                readable_board[y,x] = 1
+                
+        return readable_board
+
+    @staticmethod
+    def get_possible_actions(board,color):
+        board_size = board.shape[-1]
+
+        actions = []
+        for y,x in product(range(board_size),range(board_size) ):
+            if OthelloEnv.valid_move(board,color, 
+                                     OthelloEnv.coordinate_to_action(board,[y,x])):
+                actions.append(OthelloEnv.coordinate_to_action(board,[y,x]))
+
+        return actions
+                
+    @staticmethod
+    def get_opponent(color):
+        opponent_colormap = {
+            OthelloEnv.BLACK: OthelloEnv.WHITE,
+            OthelloEnv.WHITE: OthelloEnv.BLACK,
+        }
+        return opponent_colormap[color]
+
+    @staticmethod
+    def is_in_bounds(x, y, size):
+        return 0 <= x < size and 0 <= y < size
+  
+    @staticmethod
+    def get_stone_counts(board):
+        print(np.mean(board,axis=0))
+        black_count, white_count = np.mean(board,axis=0)[:2]
+        return black_count, white_count
+              
+    @staticmethod
+    def game_finished(board):
+        # Returns 1 if player 1 wins, -1 if player 2 wins and 0 otherwise
+
+        black_count, white_count = OthelloEnv.get_stone_counts(board)
+        all_stones = black_count + white_count
+        print(all_stones)
+        # a full board means no more moves can be made, game over.
+        if all_stones == board.shape[-1]**2.:
+            if black_count > white_count:
+                return 1
+            elif black_count == white_count:            
+                return 0
+            else:
+                # tie goes to white
+                return -1
+    
+        # a non-full board can still be game-over if neither player can move.
+        black_legal = OthelloEnv.get_possible_actions((board, OthelloEnv.BLACK))
+        if black_legal:
+            return False
+    
+        white_legal = OthelloEnv.get_possible_actions((board, OthelloEnv.WHITE))
+        if white_legal:
+            return False
+    
+        # neither black nor white has valid moves
+        if black_count > white_count:
+            return 1
+        elif black_count == white_count:            
+            return 0
         else:
-            raise error.Error('Unrecognized opponent policy {}'.format(self.opponent))
+            # tie goes to white
+            return -1
