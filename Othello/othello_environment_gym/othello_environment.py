@@ -118,9 +118,6 @@ class OthelloEnv(gym.Env):
         return self.state
 
     def _step(self, action):
-#        print(OthelloEnv.readable_board(self.state),
-#          self.player_color)
-        print("move",OthelloEnv.action_to_coordinate(self.state,action))
         assert self.to_play == self.player_color
         # If already terminal, then don't do anything
         if self.done:
@@ -321,7 +318,6 @@ class OthelloEnv(gym.Env):
     @staticmethod
     def get_possible_actions(board,color):
         board_size = board.shape[-1]
-
         actions = []
         for y,x in product(range(board_size),range(board_size) ):
             if OthelloEnv.valid_move(board,color, 
@@ -344,8 +340,7 @@ class OthelloEnv(gym.Env):
   
     @staticmethod
     def get_stone_counts(board):
-        print(np.mean(board,axis=0))
-        black_count, white_count = np.mean(board,axis=0)[:2]
+        black_count, white_count = np.sum(board,axis=(1,2))[:2]
         return black_count, white_count
               
     @staticmethod
@@ -354,7 +349,6 @@ class OthelloEnv(gym.Env):
 
         black_count, white_count = OthelloEnv.get_stone_counts(board)
         all_stones = black_count + white_count
-        print(all_stones)
         # a full board means no more moves can be made, game over.
         if all_stones == board.shape[-1]**2.:
             if black_count > white_count:
@@ -366,11 +360,11 @@ class OthelloEnv(gym.Env):
                 return -1
     
         # a non-full board can still be game-over if neither player can move.
-        black_legal = OthelloEnv.get_possible_actions((board, OthelloEnv.BLACK))
+        black_legal = OthelloEnv.get_possible_actions(board, OthelloEnv.BLACK)
         if black_legal:
             return False
     
-        white_legal = OthelloEnv.get_possible_actions((board, OthelloEnv.WHITE))
+        white_legal = OthelloEnv.get_possible_actions(board, OthelloEnv.WHITE)
         if white_legal:
             return False
     
