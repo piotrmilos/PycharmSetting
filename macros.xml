@@ -1,0 +1,9 @@
+<application>
+  <component name="ActionMacroManager">
+    <macro name="EasyMove">
+      <action id="EditorLineStart" />
+      <action id="EditorBackSpace" />
+      <typing text-keycode="44:0">,</typing>
+    </macro>
+  </component>
+</application>
