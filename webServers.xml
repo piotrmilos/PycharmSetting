@@ -1,24 +1,8 @@
 <application>
   <component name="WebServers">
     <option name="servers">
-      <webServer id="6a934bac-3042-40fe-abe1-aef3d6d5389c" name="ml1" url="http://173.192.46.45">
-        <fileTransfer host="173.192.46.45" port="22" privateKey="$USER_HOME$/.ssh/id_rsa" rootFolder="/home/pmilos" accessType="SFTP" username="pmilos" keyPair="true">
-          <advancedOptions>
-            <advancedOptions dataProtectionLevel="Private" />
-          </advancedOptions>
-          <option name="port" value="22" />
-        </fileTransfer>
-      </webServer>
-      <webServer id="7df97297-72ff-4597-a48a-e60740846630" name="ml2" url="http://67.228.64.37">
-        <fileTransfer host="67.228.64.37" port="22" privateKey="$USER_HOME$/.ssh/id_rsa" rootFolder="/home/pmilos" accessType="SFTP" username="pmilos" keyPair="true">
-          <advancedOptions>
-            <advancedOptions dataProtectionLevel="Private" />
-          </advancedOptions>
-          <option name="port" value="22" />
-        </fileTransfer>
-      </webServer>
-      <webServer id="40f33f22-08b6-4044-8e17-c7908ca67611" name="ml3" url="http://67.228.64.36">
-        <fileTransfer host="67.228.64.36" port="22" privateKey="$USER_HOME$/.ssh/id_rsa" rootFolder="/home/pmilos" accessType="SFTP" username="pmilos" keyPair="true">
+      <webServer id="6a56b7b2-c6f4-4dd9-8479-8149af311516" name="pascal01" url="http://pascal01">
+        <fileTransfer host="pascal01" port="22" privateKey="$USER_HOME$/.ssh/id_rsa" rootFolder="/home/piotr.milos" accessType="SFTP" username="piotr.milos" keyPair="true">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" />
           </advancedOptions>

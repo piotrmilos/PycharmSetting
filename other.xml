@@ -2,18 +2,21 @@
   <component name="PyTestFrameworkService">
     <option name="SDK_TO_PYTEST">
       <map>
-        <entry key="sftp://pmilos@173.192.46.45:22/usr/bin/python" value="true" />
+        <entry key="sftp://piotr.milos@pascal01:22/usr/bin/python" value="false" />
+        <entry key="sftp://pmilos@173.192.46.45:22/usr/bin/python" value="false" />
         <entry key="sftp://pmilos@67.228.64.37:22/usr/bin/python" value="false" />
       </map>
     </option>
     <option name="SDK_TO_NOSETEST">
       <map>
-        <entry key="sftp://pmilos@173.192.46.45:22/usr/bin/python" value="true" />
+        <entry key="sftp://piotr.milos@pascal01:22/usr/bin/python" value="false" />
+        <entry key="sftp://pmilos@173.192.46.45:22/usr/bin/python" value="false" />
         <entry key="sftp://pmilos@67.228.64.37:22/usr/bin/python" value="true" />
       </map>
     </option>
     <option name="SDK_TO_ATTEST">
       <map>
+        <entry key="sftp://piotr.milos@pascal01:22/usr/bin/python" value="false" />
         <entry key="sftp://pmilos@173.192.46.45:22/usr/bin/python" value="false" />
         <entry key="sftp://pmilos@67.228.64.37:22/usr/bin/python" value="false" />
       </map>
