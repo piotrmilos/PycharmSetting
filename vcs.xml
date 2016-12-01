@@ -6,7 +6,16 @@
           <option name="url" value="http://github.com" />
           <option name="userName" value="piotrmilos" />
         </UrlAndUserName>
+        <UrlAndUserName>
+          <option name="url" value="https://github.com/ppwwyyxx/tensorpack" />
+          <option name="userName" value="" />
+        </UrlAndUserName>
+        <UrlAndUserName>
+          <option name="url" value="https://github.com/codilime/rl.git" />
+          <option name="userName" value="" />
+        </UrlAndUserName>
       </list>
     </option>
+    <option name="cloneParentDir" value="$USER_HOME$/PycharmProjects" />
   </component>
 </application>
