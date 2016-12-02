@@ -4,7 +4,6 @@
       <set>
         <option value="/usr/bin/python3.5" />
         <option value="sftp://piotr.milos@pascal01:22/home/piotr.milos/my_env/bin/python" />
-        <option value="sftp://piotr.milos@pascal01:22/usr/bin/python" />
         <option value="sftp://pmilos@173.192.46.45:22/usr/bin/python" />
         <option value="sftp://pmilos@67.228.64.37:22/usr/bin/python" />
         <option value="ssh://pmilos@173.192.46.45:22/usr/bin/python" />
