@@ -24,6 +24,6 @@
         </UrlAndUserName>
       </list>
     </option>
-    <option name="cloneParentDir" value="$USER_HOME$/PycharmProjects/rl2" />
+    <option name="cloneParentDir" value="$USER_HOME$/TMP" />
   </component>
 </application>
