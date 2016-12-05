@@ -22,8 +22,12 @@
           <option name="url" value="https://github.com/piotrmilos/tensorpack.git" />
           <option name="userName" value="" />
         </UrlAndUserName>
+        <UrlAndUserName>
+          <option name="url" value="https://github.com/codilime/deeplearning.git" />
+          <option name="userName" value="" />
+        </UrlAndUserName>
       </list>
     </option>
-    <option name="cloneParentDir" value="$USER_HOME$/PycharmProjects/rl2" />
+    <option name="cloneParentDir" value="$USER_HOME$/PycharmProjects/nielsen2" />
   </component>
 </application>
