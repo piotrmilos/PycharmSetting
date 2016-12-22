@@ -26,8 +26,12 @@
           <option name="url" value="https://github.com/codilime/deeplearning.git" />
           <option name="userName" value="" />
         </UrlAndUserName>
+        <UrlAndUserName>
+          <option name="url" value="https://github.com/openai/universe-starter-agent.git" />
+          <option name="userName" value="" />
+        </UrlAndUserName>
       </list>
     </option>
-    <option name="cloneParentDir" value="$USER_HOME$/PycharmProjects/nielsen2" />
+    <option name="cloneParentDir" value="$USER_HOME$/PycharmProjects" />
   </component>
 </application>
