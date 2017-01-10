@@ -4,6 +4,7 @@
     <extensionMap>
       <mapping pattern="starting_point_selector" type="PLAIN_TEXT" />
       <mapping pattern="dataset" type="PLAIN_TEXT" />
+      <mapping pattern="level1_key" type="PLAIN_TEXT" />
       <mapping pattern="sql_test" type="Python" />
     </extensionMap>
   </component>
