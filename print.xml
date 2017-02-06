@@ -1,5 +1,6 @@
 <application>
   <component name="PrintSettings">
     <option name="printScope" value="1" />
+    <option name="COLOR_PRINTING" value="true" />
   </component>
 </application>
