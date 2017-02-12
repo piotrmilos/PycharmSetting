@@ -1,8 +1,8 @@
 <application>
   <component name="WebServers">
     <option name="servers">
-      <webServer id="6a56b7b2-c6f4-4dd9-8479-8149af311516" name="pascal01" url="http://pascal01">
-        <fileTransfer host="pascal01" port="22" privateKey="$USER_HOME$/.ssh/id_rsa" rootFolder="/home/piotr.milos" accessType="SFTP" username="piotr.milos" keyPair="true">
+      <webServer id="6a56b7b2-c6f4-4dd9-8479-8149af311516" name="pascal01" url="http://phi01">
+        <fileTransfer host="phi01" port="22" privateKey="$USER_HOME$/.ssh/id_rsa" rootFolder="/home/piotr.milos" accessType="SFTP" username="piotr.milos" keyPair="true">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" />
           </advancedOptions>
