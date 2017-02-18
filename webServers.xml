@@ -1,0 +1,14 @@
+<application>
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="da36b1ce-41d1-4fb8-afd6-a9a957ccf718" name="Copy of project-level server 'pascal-tower01'" url="http://pascal-tower01">
+        <fileTransfer host="pascal-tower01" port="22" privateKey="$USER_HOME$/.ssh/id_rsa" rootFolder="/home/piotr.milos" accessType="SFTP" username="piotr.milos" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</application>
