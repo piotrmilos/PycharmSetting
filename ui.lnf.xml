@@ -1,5 +1,6 @@
 <application>
   <component name="UISettings">
+    <option name="SHOW_NAVIGATION_BAR" value="false" />
     <option name="MAX_LOOKUP_LIST_HEIGHT" value="7" />
   </component>
 </application>
