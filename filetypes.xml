@@ -6,6 +6,7 @@
       <mapping pattern="dataset" type="PLAIN_TEXT" />
       <mapping pattern="level1_key" type="PLAIN_TEXT" />
       <mapping pattern="test" type="PLAIN_TEXT" />
+      <mapping ext="bin" type="PLAIN_TEXT" />
       <mapping ext="ttf" type="PLAIN_TEXT" />
       <mapping pattern="sql_test" type="Python" />
       <mapping pattern="manual_pong" type="Python" />
