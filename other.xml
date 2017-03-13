@@ -57,6 +57,7 @@
         <entry key="sftp://piotr.milos@pascal01:22/home/piotr.milos/my_env2/bin/python" value="false" />
         <entry key="sftp://piotr.milos@pascal01:22/usr/bin/python" value="false" />
         <entry key="sftp://piotr.milos@phi01:22/usr/bin/python" value="false" />
+        <entry key="sftp://piotr@172.17.10.79:22/home/piotr/venvs/ml_robotics/bin/python" value="false" />
         <entry key="sftp://pmilos@173.192.46.45:22/usr/bin/python" value="false" />
         <entry key="sftp://pmilos@67.228.64.37:22/usr/bin/python" value="false" />
       </map>
@@ -70,6 +71,7 @@
         <entry key="sftp://piotr.milos@pascal01:22/home/piotr.milos/my_env2/bin/python" value="false" />
         <entry key="sftp://piotr.milos@pascal01:22/usr/bin/python" value="false" />
         <entry key="sftp://piotr.milos@phi01:22/usr/bin/python" value="false" />
+        <entry key="sftp://piotr@172.17.10.79:22/home/piotr/venvs/ml_robotics/bin/python" value="false" />
         <entry key="sftp://pmilos@173.192.46.45:22/usr/bin/python" value="false" />
         <entry key="sftp://pmilos@67.228.64.37:22/usr/bin/python" value="true" />
       </map>
@@ -83,6 +85,7 @@
         <entry key="sftp://piotr.milos@pascal01:22/home/piotr.milos/my_env2/bin/python" value="false" />
         <entry key="sftp://piotr.milos@pascal01:22/usr/bin/python" value="false" />
         <entry key="sftp://piotr.milos@phi01:22/usr/bin/python" value="false" />
+        <entry key="sftp://piotr@172.17.10.79:22/home/piotr/venvs/ml_robotics/bin/python" value="false" />
         <entry key="sftp://pmilos@173.192.46.45:22/usr/bin/python" value="false" />
         <entry key="sftp://pmilos@67.228.64.37:22/usr/bin/python" value="false" />
       </map>

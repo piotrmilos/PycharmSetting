@@ -9,6 +9,14 @@
           <option name="port" value="22" />
         </fileTransfer>
       </webServer>
+      <webServer id="481f1461-4ed0-4519-a657-ed62ab134ff4" name="Copy of project-level server 'my'" url="http://172.17.10.79">
+        <fileTransfer host="172.17.10.79" port="22" privateKey="$USER_HOME$/.ssh/id_rsa" rootFolder="/home/piotr" accessType="SFTP" username="piotr" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
     </option>
   </component>
 </application>
